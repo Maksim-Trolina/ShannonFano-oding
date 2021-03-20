@@ -7,7 +7,7 @@ namespace ShannonFano
     {
         static void Main(string[] args)
         {
-            try
+            /*try
             {
                 IComparer comparer = new IntComparer();
 
@@ -37,7 +37,24 @@ namespace ShannonFano
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
+            }*/
+            
+            ShannonFanoCoding shannonFanoCoding = new ShannonFanoCoding();
+
+            var text = Console.ReadLine();
+
+            var data = shannonFanoCoding.Coding(text);
+
+            foreach (var s in data)
+            {
+                Console.WriteLine($"{s.Value}: {s.Code}");
             }
+
+            var code = Console.ReadLine();
+
+            var res = shannonFanoCoding.Decoding(code);
+            
+            Console.WriteLine(res);
         }
     }
 }

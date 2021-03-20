@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace ShannonFano
 {
@@ -9,9 +10,25 @@ namespace ShannonFano
 
         private IComparer comparer;
 
+        public int Count { get; private set; }
+
         public AVLTree(IComparer comparer)
         {
             this.comparer = comparer;
+        }
+
+        public void Clear()
+        {
+            root = null;
+        }
+
+        public List<V> GetItems()
+        {
+            var items = new List<V>();
+            
+            AddItem(root,items);
+
+            return items;
         }
 
         public V Find(T key)
@@ -23,11 +40,29 @@ namespace ShannonFano
         public void Insert(T key, V value)
         {
             root = Insert<T, V>(root, key, value);
+
+            Count++;
         }
 
         public void Remove(T key)
         {
             root = Remove(root, key);
+
+            Count--;
+        }
+
+        private void AddItem(Node<T, V> node, List<V> items)
+        {
+            if (node == null)
+            {
+                return;
+            }
+
+            AddItem(node.Left, items);
+
+            items.Add(node.Item);
+
+            AddItem(node.Right, items);
         }
 
         private int Height<T, V>(Node<T, V> node)

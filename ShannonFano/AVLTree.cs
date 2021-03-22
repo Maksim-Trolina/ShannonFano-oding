@@ -17,16 +17,12 @@ namespace ShannonFano
             this.comparer = comparer;
         }
 
-        public void Clear()
-        {
-            root = null;
-        }
 
         public List<V> GetItems()
         {
             var items = new List<V>();
-            
-            AddItem(root,items);
+
+            AddItem(root, items);
 
             return items;
         }
@@ -44,12 +40,6 @@ namespace ShannonFano
             Count++;
         }
 
-        public void Remove(T key)
-        {
-            root = Remove(root, key);
-
-            Count--;
-        }
 
         private void AddItem(Node<T, V> node, List<V> items)
         {
@@ -142,58 +132,6 @@ namespace ShannonFano
             else
             {
                 node.Right = Insert(node.Right, key, value);
-            }
-
-            return Balance(node);
-        }
-
-
-        private Node<T, V> FindMin<T, V>(Node<T, V> node)
-        {
-            return node.Left != null ? FindMin(node.Left) : node;
-        }
-
-        private Node<T, V> RemoveMin<T, V>(Node<T, V> node)
-        {
-            if (node.Left == null)
-            {
-                return node.Right;
-            }
-
-            node.Left = RemoveMin(node.Left);
-
-            return Balance(node);
-        }
-
-        private Node<T, V> Remove<T, V>(Node<T, V> node, T key)
-        {
-            if (node == null)
-            {
-                throw new Exception("Not found item with same key");
-            }
-
-            switch (comparer.Compare(key, node.Key))
-            {
-                case (int) ComparisonResult.Less:
-                    node.Left = Remove(node.Left, key);
-                    break;
-                case (int) ComparisonResult.More:
-                    node.Right = Remove(node.Right, key);
-                    break;
-                default:
-                {
-                    var left = node.Left;
-                    var right = node.Right;
-                    if (right == null)
-                    {
-                        return left;
-                    }
-
-                    var min = FindMin(right);
-                    min.Right = RemoveMin(right);
-                    min.Left = left;
-                    return Balance(min);
-                }
             }
 
             return Balance(node);

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace ShannonFano
@@ -8,6 +9,11 @@ namespace ShannonFano
 
         public (List<Symbol>,string) Code(string text)
         {
+            if (text.Length == 0)
+            {
+                throw new Exception("Empty string received");
+            }
+            
             var textHandler = new TextHandler();
 
             var symbols = textHandler.GetSymbols(text);

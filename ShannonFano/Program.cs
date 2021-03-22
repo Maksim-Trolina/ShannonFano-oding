@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections;
+using System.Collections.Generic;
 
 namespace ShannonFano
 {
@@ -7,54 +7,52 @@ namespace ShannonFano
     {
         static void Main(string[] args)
         {
-            /*try
-            {
-                IComparer comparer = new IntComparer();
+            var shannonFanoCoding = new ShannonFanoCoding();
 
-                var tree = new AVLTree<int, string>(comparer);
-
-                tree.Insert(1, "ffd");
-
-                tree.Insert(5, "ggav");
-
-                tree.Insert(7, "bnb");
-
-                tree.Insert(0, "tgg");
-
-                tree.Insert(3, "ll");
-
-                tree.Insert(11, "65hff");
-                
-
-                tree.Remove(0);
-
-                tree.Remove(1);
-
-                var val = tree.Find(5);
-                
-                Console.WriteLine(val);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-            }*/
-            
-            ShannonFanoCoding shannonFanoCoding = new ShannonFanoCoding();
+            Console.Write("Enter text: ");
 
             var text = Console.ReadLine();
 
-            var data = shannonFanoCoding.Coding(text);
+            var (symbols, code) = shannonFanoCoding.Code(text);
 
-            foreach (var s in data)
+            var memorySize = CalculateMemorySize(symbols);
+
+            var sourceMemorySize = text.Length * 8;
+
+            var compressionRatio = memorySize / (float)sourceMemorySize * 100;
+
+            Console.WriteLine($"Memory size source text: {sourceMemorySize}bit");
+
+            Console.WriteLine($"Memory size encoded text: {memorySize}bit");
+            
+            Console.WriteLine($"Compression ratio: {compressionRatio}%");
+
+            Console.WriteLine("Symbol\tCode\tFrequency");
+
+            foreach (var symbol in symbols)
             {
-                Console.WriteLine($"{s.Value}: {s.Code}");
+                Console.WriteLine($"{symbol.Value}\t{symbol.Code}\t{symbol.Count}");
             }
 
-            var code = Console.ReadLine();
+            Console.WriteLine($"Encoded text: {code}");
 
-            var res = shannonFanoCoding.Decoding(code);
-            
-            Console.WriteLine(res);
+            var encodedText = Console.ReadLine();
+
+            var decoding = shannonFanoCoding.Decode(encodedText);
+
+            Console.WriteLine($"Source text: {decoding}");
+        }
+
+        static int CalculateMemorySize(List<Symbol> symbols)
+        {
+            var memorySize = 0;
+
+            foreach (var symbol in symbols)
+            {
+                memorySize += symbol.Count * symbol.Code.Length;
+            }
+
+            return memorySize;
         }
     }
 }

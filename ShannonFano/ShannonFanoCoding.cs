@@ -4,9 +4,9 @@ namespace ShannonFano
 {
     public class ShannonFanoCoding
     {
-        private AVLTree<string, Symbol> tree;
+        private AVLTree<string, Symbol> codeTree;
 
-        public List<Symbol> Coding(string text)
+        public (List<Symbol>,string) Code(string text)
         {
             var textHandler = new TextHandler();
 
@@ -16,26 +16,28 @@ namespace ShannonFano
 
             var sum = GetSum(symbols);
 
-            Rec(symbols, sum, "");
+            CreateCode(symbols, sum, "");
 
-            this.tree = textHandler.CreatePrefixTree(symbols);
+            codeTree = textHandler.CreatePrefixTree(symbols);
 
-            return symbols;
+            var code = textHandler.GetEncodedText(text, symbols);
+
+            return (symbols,code);
         }
 
-        public string Decoding(string code)
+        public string Decode(string code)
         {
             var prefix = "";
 
             var text = "";
 
-            for (int i = 0; i < code.Length; i++)
+            for (var i = 0; i < code.Length; i++)
             {
                 prefix += code[i];
 
                 try
                 {
-                    var symbol = tree.Find(prefix);
+                    var symbol = codeTree.Find(prefix);
 
                     text += symbol.Value;
 
@@ -49,7 +51,7 @@ namespace ShannonFano
             return text;
         }
 
-        private void Rec(List<Symbol> symbols, int sum, string code)
+        private void CreateCode(List<Symbol> symbols, int sum, string code)
         {
             if (symbols.Count == 1)
             {
@@ -78,9 +80,9 @@ namespace ShannonFano
                 }
             }
 
-            Rec(leftList, curSum, code + "0");
+            CreateCode(leftList, curSum, code + "0");
 
-            Rec(rightList, sum - curSum, code + "1");
+            CreateCode(rightList, sum - curSum, code + "1");
         }
 
 
